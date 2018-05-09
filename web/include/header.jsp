@@ -9,23 +9,17 @@
 <div id="header">
     <div class="section">
         <div class="logo">
-            <a href="index.html">zizurz</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">SEORG</a>
         </div>
         <ul>
             <li>
-                <a href="index.html">home</a>
+                <a href="${pageContext.request.contextPath}/index.jsp">home</a>
             </li>
-            <li class="selected">
-                <a href="about.html">about</a>
-            </li>
-            <li>
-                <a href="hairstyle.html">hairstyles</a>
+            <li >
+                <a href="${pageContext.request.contextPath}/Controller?page=list_users">List Users</a>
             </li>
             <li>
-                <a href="news.html">news</a>
-            </li>
-            <li>
-                <a href="contact.html">contact</a>
+                <a href="${pageContext.request.contextPath}/Controller?page=add_user">Add User</a>
             </li>
         </ul>
     </div>
