@@ -3,21 +3,38 @@ package model;
 import user.User;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBHelper {
     private ResultSet users = null;
 
-    public ResultSet getUsers(DataSource dataSource) throws SQLException {
+    public List<User> getUsers(DataSource dataSource) throws SQLException {
 
-        Connection conn;
-        Statement stmt;
+        Connection conn = null;
+        Statement stmt = null;
+        List<User> usersList = new ArrayList<>();
+
 
         conn = dataSource.getConnection();
         stmt = conn.createStatement();
         String query = "select * from users";
         users = stmt.executeQuery(query);
 
-        return users;
+        //convert resultSet users to list
+        while (users.next()){
+            int user_id = users.getInt("user_id");
+            String name = users.getString("name");
+            String email = users.getString("email");
+            User temp = new User(user_id, name, email);
+            usersList.add(temp);
+        }
+
+        //close the connections
+        conn.close();
+        stmt.close();
+
+        return usersList;
     }
 
     public boolean addUser(User user, DataSource dataSource) throws SQLException {

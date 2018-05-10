@@ -1,34 +1,19 @@
 <%@include file="include/header.jsp" %>
-<%@page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <table border="1">
-
     <th>User ID</th>
-    <th>Name</th>
-    <th>Email</th>
+    <th>Name </th>
+    <th>Email </th>
 
-    <%
-        ResultSet rs = (ResultSet) request.getAttribute("users");
-        while (rs.next()) {
-            out.println("<tr>");
-
-            out.println("<td>");
-            out.print(rs.getString("user_id"));
-            out.println("</td>");
-
-            out.println("<td>");
-            out.print(rs.getString("name"));
-            out.println("</td>");
-
-            out.println("<td>");
-            out.print(rs.getString("email"));
-            out.println("</td>");
-
-            out.println("</tr>");
-        }
-
-    %>
+    <c:forEach var="temp" items="${users }">
+        <tr>
+            <td>${ temp.user_id} </td>
+            <td>${ temp.name} </td>
+            <td>${ temp.email} </td>
+        </tr>
+    </c:forEach>
 </table>
-
 
 <%@include file="include/footer.jsp" %>

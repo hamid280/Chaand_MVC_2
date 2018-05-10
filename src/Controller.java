@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Controller extends HttpServlet {
 
@@ -76,8 +77,8 @@ public class Controller extends HttpServlet {
 
     private void listUsers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 
-        ResultSet rs = new DBHelper().getUsers(dataSource);
-        request.setAttribute("users", rs);
+        List<User> usersList = new DBHelper().getUsers(dataSource);
+        request.setAttribute("users", usersList);
         request.getRequestDispatcher("list_users.jsp").forward(request, response);
     }
 }
