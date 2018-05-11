@@ -51,4 +51,74 @@ public class DBHelper {
         return stmt.execute();
 
     }
+
+    public User getUser(int user_id, DataSource dataSource) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        User user= null;
+
+        try{
+            conn = dataSource.getConnection();
+            String query = "select * from users where user_id=?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, user_id);
+            rs = stmt.executeQuery();
+
+            //now execute name and email from result set
+            String name = null;
+            String email = null;
+            if(rs.next()){
+                name = rs.getString("name");
+                email = rs.getString("email");
+            }
+            user = new User(user_id, name, email);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+
+        return user;
+    }
+
+    public boolean updateUser(User user, DataSource dataSource) throws SQLException {
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try{
+            conn = dataSource.getConnection();
+            String query = "update users set name=?, email=? where user_id=?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1,user.getName());
+            stmt.setString(2,user.getEmail());
+            stmt.setInt(3,user.getUser_id());
+            return stmt.execute();
+
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+    }
+
+    public boolean deleteUser(int user_id, DataSource dataSource) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try{
+            conn = dataSource.getConnection();
+            String query = "delete from users where user_id=?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, user_id);
+            return stmt.execute();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+
+
+    }
 }

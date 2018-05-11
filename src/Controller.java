@@ -1,4 +1,5 @@
 import model.DBHelper;
+import sun.security.pkcs11.Secmod;
 import user.User;
 
 import javax.annotation.Resource;
@@ -50,10 +51,63 @@ public class Controller extends HttpServlet {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            case "updateUser":
+                int user_id = Integer.parseInt(request.getParameter("user_id"));
+                try {
+                    updateUser(user_id, request, response);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "deleteUser":
+                int user_id1 = Integer.parseInt(request.getParameter("user_id"));
+                try {
+                    deleteUser(user_id1, request, response);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
             default:
                 error(request, response);
                 break;
         }
+    }
+
+    private void deleteUser(int user_id, HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        new DBHelper().deleteUser(user_id, dataSource);
+        listUsers(request,response);
+    }
+
+
+    private void updateUser(int user_id, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        if (request.getParameterMap().containsKey("action")) {
+            if (request.getParameter("action").equals("submit")) {
+
+                //update the record code goes
+                String name = request.getParameter("name");
+                String email = request.getParameter("email");
+                User tempUser = new User(user_id, name, email);
+                new DBHelper().updateUser(tempUser, dataSource);
+                request.setAttribute("message", "Record Updated!!");
+                request.getRequestDispatcher("message.jsp").forward(request, response);
+            }
+        } else {
+
+            //create a user reference
+            User user = null;
+
+            //Read user from DB Helper
+            try {
+                user = new DBHelper().getUser(user_id, dataSource);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            //set the attribute after we got user from the internet
+            request.setAttribute("User", user);
+            request.getRequestDispatcher("updateUser.jsp").forward(request, response);
+        }
+
     }
 
     private void submitUser(User user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
